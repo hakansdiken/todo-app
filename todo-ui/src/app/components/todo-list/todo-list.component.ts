@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TodoService } from '../../services/todo.service';
 import { Todo } from '../../models/todo/todo';
@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 export class TodoListComponent implements OnInit {
 
   @Input() todos: Todo[] = [];
+  @Output() todoChanged = new EventEmitter<void>();
 
   backupContents = new Map<number, string>(); //geçici veri. cancel oldugunda içeriği kaybolmaması için.
   editingStates = new Map<number, boolean>();
@@ -26,25 +27,14 @@ export class TodoListComponent implements OnInit {
   constructor(private todoService: TodoService) { }
 
   ngOnInit(): void {
-    this.loadTodos();
+
   }
 
-  loadTodos() {
-
-    this.todoService.getTodos().subscribe({
-
-      next: data => {
-        this.todos = data;
-      },
-      error: err => {
-        alert('Error:' + err.error.message);
-      }
-    });
-  }
 
   deleteTodo(id: number) {
-
-    this.todoService.deleteTodo(id).subscribe(() => this.loadTodos());
+    this.todoService.deleteTodo(id).subscribe(() => {
+      this.todoChanged.emit();
+    });
   }
 
   onContentChange(value: string) {
@@ -98,7 +88,7 @@ export class TodoListComponent implements OnInit {
 
     this.todoService.updateTodo(this.editingTodo).subscribe(() => {
       this.editingTodo = null;
-      this.loadTodos();
+      this.todoChanged;
     });
   }
 

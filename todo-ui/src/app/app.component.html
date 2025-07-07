@@ -1,2 +1,2 @@
 <app-todo-input (todoAdded) = "loadTodos()"></app-todo-input>
-<app-todo-list [todos]="todos"></app-todo-list>
+<app-todo-list [todos]="todos" (todoChanged) = "loadTodos()"></app-todo-list>

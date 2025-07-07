@@ -23,14 +23,16 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
 
     try {
-
-        const todo = await todoService.getTodoById(req.params.id);
-
-        if (!todo) return res.status(404).json({ error: "Todo not found" });
+        const id = Number(req.params.id)
+        const todo = await todoService.getTodoById(id);
 
         res.json(todo);
 
     } catch (err) {
+
+        if (err.message === "Todo not found") {
+            return res.status(404).json({ message: err.message });
+        }
 
         res.status(500).json({ message: err.message });
     }
@@ -50,9 +52,11 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/:id", async (req, res) => {
+
     try {
 
-        const updated = await todoService.updateTodo(req.params.id, req.body);
+        const id = Number(req.params.id)
+        const updated = await todoService.updateTodo(id, req.body);
 
         res.json(updated);
 
@@ -74,7 +78,9 @@ router.delete("/:id", async (req, res) => {
 
     try {
 
-        await todoService.deleteTodo(req.params.id);
+        const id = req.params.id
+
+        await todoService.deleteTodo(id);
         res.status(204).send();
 
     } catch (err) {

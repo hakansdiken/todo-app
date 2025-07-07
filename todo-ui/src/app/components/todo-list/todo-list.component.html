@@ -3,18 +3,18 @@
 
     <ul class="list-group d-flex flex-row justify-content-between align-items-center fw-bold mb-2"
       style="padding-left: 0; list-style: none; border-bottom: 2px solid #dee2e6;">
-      <li style="flex: 2;">Task</li>
+      <li style="flex: 2; ">Task</li>
       <li style="flex: 1; text-align: center;">State</li>
       <li style="flex: 1; text-align: center;">Operations</li>
     </ul>
 
     <!-- List -->
-    <ul class="list-group" style="padding-left: 0;">
-      <li *ngFor="let todo of todos" class="list-group-item d-flex align-items-center"
+    <ul class="list-group">
+      <li *ngFor="let todo of todos" class="mb-2 list-group-item d-flex align-items-center"
         [class.list-group-item-success]="todo.is_done" [class.list-group-item-secondary]="!todo.is_done"
-        style="gap: 1rem;">
+        style="gap: 1rem; border-radius: 10px;"> 
 
-        <div style=" flex: 3; min-width: 0; overflow-wrap: break-word; word-wrap: break-word; white-space: normal;">
+        <div style=" flex: 2; min-width: 0; overflow-wrap: break-word; word-wrap: break-word; white-space: normal;">
           <input *ngIf="isEditing(todo)" [(ngModel)]="todo.content" class="form-control"  (ngModelChange)="onContentChange($event)"/>
           <p *ngIf="!isEditing(todo)" style="margin: 0; overflow-wrap: break-word; word-wrap: break-word; white-space: normal;">
             {{ todo.content }}
@@ -34,7 +34,7 @@
         </span>
 
         <!-- Operator Buttons-->
-        <div style="flex: 2; display: flex; gap: 0.5rem; justify-content: flex-end;">
+        <div style="flex: 1; display: flex; gap: 0.5rem; justify-content: flex-end;">
           <button *ngIf="!isEditing(todo)" class="btn btn-warning btn-sm" (click)="startEditing(todo)">Edit</button>
           <button *ngIf="!isEditing(todo)" class="btn btn-danger btn-sm" (click)="deleteTodo(todo.id)">Delete</button>
           <button *ngIf="isEditing(todo)" class="btn btn-success btn-sm" (click)="saveEdit(todo)" [disabled]="!isContentValid" >Save</button>
@@ -43,7 +43,4 @@
       </li>
     </ul>
   </div>
-
-
-
 </div>
