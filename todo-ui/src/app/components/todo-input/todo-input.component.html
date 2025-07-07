@@ -1,0 +1,19 @@
+<div class="container mt-4">
+  <div class="mx-auto p-4 shadow rounded" style="max-width: 600px; background-color: #f8f9fa;">
+
+    <h4 class="mb-3">Create a task</h4>
+
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" placeholder="Please enter a task" [(ngModel)]="content"
+        (ngModelChange)="onContentChange($event)" />
+      <button class="btn btn-primary" (click)="addTodo()" [disabled]="!isContentValid">Create</button>
+    </div>
+
+    <div class="form-check mb-2">
+      <input type="checkbox" class="form-check-input" [(ngModel)]="is_done" name="doneCheck" id="doneCheck" />
+      <label class="form-check-label" for="doneCheck">
+        Mark as completed
+      </label>
+    </div>
+  </div>
+</div>

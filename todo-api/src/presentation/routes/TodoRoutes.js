@@ -1,0 +1,94 @@
+import express from "express";
+import { DbTodoRepository } from "../../infrastructure/repository/DbTodoRepository.js";
+import { TodoService } from "../../domain/services/TodoService.js"
+
+const router = express.Router();
+const todoRepository = new DbTodoRepository();
+const todoService = new TodoService(todoRepository);
+
+
+router.get("/", async (req, res) => {
+
+    try {
+
+        const todos = await todoService.getAllTodos();
+        res.json(todos);
+
+    } catch (err) {
+
+        res.status(500).json({ message: err.message });
+    }
+});
+
+router.get("/:id", async (req, res) => {
+
+    try {
+
+        const todo = await todoService.getTodoById(req.params.id);
+
+        if (!todo) return res.status(404).json({ error: "Todo not found" });
+
+        res.json(todo);
+
+    } catch (err) {
+
+        res.status(500).json({ message: err.message });
+    }
+});
+
+router.post("/", async (req, res) => {
+
+    try {
+
+        const newTodo = await todoService.createTodo(req.body);
+
+        res.status(201).json(newTodo);
+
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
+
+router.put("/:id", async (req, res) => {
+    try {
+
+        const updated = await todoService.updateTodo(req.params.id, req.body);
+
+        res.json(updated);
+
+    } catch (err) {
+
+        if (err.message === "Todo not found") {
+
+            res.status(404).json({ message: err.message });
+
+        } else {
+
+            res.status(400).json({ message: err.message });
+
+        }
+    }
+});
+
+router.delete("/:id", async (req, res) => {
+
+    try {
+
+        await todoService.deleteTodo(req.params.id);
+        res.status(204).send();
+
+    } catch (err) {
+
+        if (err.message === "Todo not found") {
+
+            res.status(404).json({ message: err.message });
+
+        } else {
+
+            res.status(500).json({ message: err.message });
+        }
+
+    }
+});
+
+export default router;
