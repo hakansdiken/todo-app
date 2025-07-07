@@ -2,18 +2,12 @@ export default function responseTimeMiddleware(req, res, next) {
 
     const startTime = Date.now();
 
-    const originalWriteHead = res.writeHead;
-
-    res.writeHead = function (...args) {
+    res.on('finish', () => {
 
         const responseTime = Date.now() - startTime;
+        console.log(`Response Time: ${responseTime}ms`);
 
-        res.setHeader("X-Response-Time", `${responseTime}ms`);
-
-        console.log(responseTime + "ms")
-
-        originalWriteHead.apply(res, args);
-    };
+    });
 
     next();
 }
