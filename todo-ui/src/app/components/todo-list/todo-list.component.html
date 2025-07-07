@@ -12,11 +12,13 @@
     <ul class="list-group">
       <li *ngFor="let todo of todos" class="mb-2 list-group-item d-flex align-items-center"
         [class.list-group-item-success]="todo.is_done" [class.list-group-item-secondary]="!todo.is_done"
-        style="gap: 1rem; border-radius: 10px;"> 
+        style="gap: 1rem; border-radius: 10px;">
 
         <div style=" flex: 2; min-width: 0; overflow-wrap: break-word; word-wrap: break-word; white-space: normal;">
-          <input *ngIf="isEditing(todo)" [(ngModel)]="todo.content" class="form-control"  (ngModelChange)="onContentChange($event)"/>
-          <p *ngIf="!isEditing(todo)" style="margin: 0; overflow-wrap: break-word; word-wrap: break-word; white-space: normal;">
+          <input *ngIf="isEditing(todo)" [(ngModel)]="todo.content" class="form-control"
+            (ngModelChange)="onContentChange($event)" />
+          <p *ngIf="!isEditing(todo)"
+            style="margin: 0; overflow-wrap: break-word; word-wrap: break-word; white-space: normal;">
             {{ todo.content }}
           </p>
         </div>
@@ -36,11 +38,21 @@
         <!-- Operator Buttons-->
         <div style="flex: 1; display: flex; gap: 0.5rem; justify-content: flex-end;">
           <button *ngIf="!isEditing(todo)" class="btn btn-warning btn-sm" (click)="startEditing(todo)">Edit</button>
-          <button *ngIf="!isEditing(todo)" class="btn btn-danger btn-sm" (click)="deleteTodo(todo.id)">Delete</button>
-          <button *ngIf="isEditing(todo)" class="btn btn-success btn-sm" (click)="saveEdit(todo)" [disabled]="!isContentValid" >Save</button>
+          <button *ngIf="!isEditing(todo)" class="btn btn-danger btn-sm" (click)="handleDelete(todo.id)">Delete</button>
+          <button *ngIf="isEditing(todo)" class="btn btn-success btn-sm" (click)="saveEdit(todo)"
+            [disabled]="!isContentValid">Save</button>
           <button *ngIf="isEditing(todo)" class="btn btn-secondary btn-sm" (click)="cancelEdit(todo)">Cancel</button>
         </div>
       </li>
     </ul>
+
+    <div *ngIf="isDeleting" class="popup-overlay">
+      <div class="popup">
+        <p>Are you sure for delete?</p>
+        <button class="btn btn-danger" (click)="confirmDelete()">Delete</button>
+        <button class="btn btn-secondary" (click)="cancelDelete()">Cancel</button>
+      </div>
+    </div>
+
   </div>
 </div>

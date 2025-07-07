@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TodoService } from '../../services/todo.service';
 import { Todo } from '../../models/todo/todo';
@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.css']
 })
-export class TodoListComponent implements OnInit {
+export class TodoListComponent {
 
   @Input() todos: Todo[] = [];
   @Output() todoChanged = new EventEmitter<void>();
@@ -21,20 +21,38 @@ export class TodoListComponent implements OnInit {
 
   editingTodo: Todo | null = null;
 
+  isDeleting: boolean = false;
+  deletingTodoId: number | null = null;
+
+
   content: string = '';
-  isContentValid: boolean = false;
+  isContentValid: boolean = true;
 
   constructor(private todoService: TodoService) { }
 
-  ngOnInit(): void {
-
-  }
-
-
   deleteTodo(id: number) {
     this.todoService.deleteTodo(id).subscribe(() => {
-      this.todoChanged.emit();
     });
+  }
+
+  handleDelete(id: number) {
+    this.deletingTodoId = id;
+    this.isDeleting = true;
+  }
+
+  confirmDelete() {
+    if (this.deletingTodoId !== null) {
+      this.todoService.deleteTodo(this.deletingTodoId).subscribe(() => {
+        this.isDeleting = false;
+        this.deletingTodoId = null;
+        this.todoChanged.emit();
+      });
+    }
+  }
+
+  cancelDelete() {
+    this.isDeleting = false;
+    this.deletingTodoId = null;
   }
 
   onContentChange(value: string) {
@@ -93,4 +111,3 @@ export class TodoListComponent implements OnInit {
   }
 
 }
-
