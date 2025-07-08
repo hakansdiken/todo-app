@@ -41,7 +41,9 @@ export class TodoListComponent {
   }
 
   confirmDelete() {
+
     if (this.deletingTodoId !== null) {
+
       this.todoService.deleteTodo(this.deletingTodoId).subscribe(() => {
         this.isDeleting = false;
         this.deletingTodoId = null;
@@ -51,16 +53,19 @@ export class TodoListComponent {
   }
 
   cancelDelete() {
+
     this.isDeleting = false;
     this.deletingTodoId = null;
   }
 
   onContentChange(value: string) {
+
     this.content = value;
     this.isContentValid = this.validateContent(value);
   }
 
   validateContent(value: string): boolean {
+
     return value.trim().length > 0 && value.length <= 100;
   }
 

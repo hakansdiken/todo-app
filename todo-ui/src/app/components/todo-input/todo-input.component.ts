@@ -18,24 +18,33 @@ export class TodoInputComponent {
   content: string = '';
   is_done: boolean = false;
 
-  isContentValid: boolean = false;
+  isContentNullValid: boolean = false;
+  isContentCharValid: boolean = false;
+  isSubmitted: boolean = false;
 
   constructor(private todoService: TodoService) { }
 
   onContentChange(value: string) {
 
     this.content = value;
-    this.isContentValid = this.validateContent(value);
+    this.isContentNullValid = this.validateNullContent(value);
+    this.isContentCharValid = this.validateCharContent(value);
   }
 
-  validateContent(value: string): boolean {
+  validateNullContent(value: string): boolean {
 
-    return value.trim().length > 0 && value.length <= 100;
+    return value.trim().length > 0;
+  }
+
+  validateCharContent(value: string): boolean {
+    return value.length <= 100;
   }
 
   addTodo() {
-    
-    if (!this.isContentValid) return;  
+
+    this.isSubmitted = true;
+
+    if (!this.isContentNullValid || !this.isContentCharValid) return;
 
     const trimmed = this.content.trim();
 
@@ -48,7 +57,9 @@ export class TodoInputComponent {
       next: () => {
         this.content = '';
         this.is_done = false;
-        this.isContentValid = false;  
+        this.isContentNullValid = false;
+        this.isContentCharValid = false;
+        this.isSubmitted = false;
         this.todoAdded.emit();
       },
       error: (err) => {

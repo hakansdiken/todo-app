@@ -1,51 +1,55 @@
 <div class="container mt-4">
   <div class="mx-auto" style="max-width: 600px;">
+    <div *ngIf="todos.length !==0 ">
+      <ul class="list-group d-flex flex-row justify-content-between align-items-center fw-bold mb-2"
+        style="padding-left: 0; list-style: none; border-bottom: 2px solid #dee2e6;">
+        <li style="flex: 2; ">Task</li>
+        <li style="flex: 1; text-align: center;">State</li>
+        <li style="flex: 1; text-align: center;">Operations</li>
+      </ul>
 
-    <ul class="list-group d-flex flex-row justify-content-between align-items-center fw-bold mb-2"
-      style="padding-left: 0; list-style: none; border-bottom: 2px solid #dee2e6;">
-      <li style="flex: 2; ">Task</li>
-      <li style="flex: 1; text-align: center;">State</li>
-      <li style="flex: 1; text-align: center;">Operations</li>
-    </ul>
+      <!-- List -->
+      <ul class="list-group">
+        <li *ngFor="let todo of todos" class="mb-2 list-group-item d-flex align-items-center"
+          [class.list-group-item-success]="todo.is_done" [class.list-group-item-secondary]="!todo.is_done"
+          style="gap: 1rem; border-radius: 10px;">
 
-    <!-- List -->
-    <ul class="list-group">
-      <li *ngFor="let todo of todos" class="mb-2 list-group-item d-flex align-items-center"
-        [class.list-group-item-success]="todo.is_done" [class.list-group-item-secondary]="!todo.is_done"
-        style="gap: 1rem; border-radius: 10px;">
+          <div style=" flex: 2; min-width: 0; overflow-wrap: break-word; word-wrap: break-word; white-space: normal;">
+            <input *ngIf="isEditing(todo)" [(ngModel)]="todo.content" class="form-control"
+              (ngModelChange)="onContentChange($event)" />
+            <p *ngIf="!isEditing(todo)"
+              style="margin: 0; overflow-wrap: break-word; word-wrap: break-word; white-space: normal;">
+              {{ todo.content }}
+            </p>
+          </div>
 
-        <div style=" flex: 2; min-width: 0; overflow-wrap: break-word; word-wrap: break-word; white-space: normal;">
-          <input *ngIf="isEditing(todo)" [(ngModel)]="todo.content" class="form-control"
-            (ngModelChange)="onContentChange($event)" />
-          <p *ngIf="!isEditing(todo)"
-            style="margin: 0; overflow-wrap: break-word; word-wrap: break-word; white-space: normal;">
-            {{ todo.content }}
-          </p>
-        </div>
+          <div *ngIf="isEditing(todo)" class="form-check">
+            <input type="checkbox" class="form-check-input" id="doneCheck{{todo.id}}" [(ngModel)]="todo.is_done" />
+            <label class="form-check-label" for="doneCheck{{todo.id}}">Completed</label>
+          </div>
 
-        <div *ngIf="isEditing(todo)" class="form-check">
-          <input type="checkbox" class="form-check-input" id="doneCheck{{todo.id}}" [(ngModel)]="todo.is_done" />
-          <label class="form-check-label" for="doneCheck{{todo.id}}">Completed</label>
-        </div>
+          <!-- State -->
+          <span class="badge rounded-pill text-white d-flex align-items-center justify-content-center"
+            [class.bg-success]="todo.is_done" [class.bg-secondary]="!todo.is_done"
+            style="flex: 1; min-width: 90px; height: 30px; text-align: center;">
+            {{ todo.is_done ? 'Completed' : 'Waiting' }}
+          </span>
 
-        <!-- State -->
-        <span class="badge rounded-pill text-white d-flex align-items-center justify-content-center"
-          [class.bg-success]="todo.is_done" [class.bg-secondary]="!todo.is_done"
-          style="flex: 1; min-width: 90px; height: 30px; text-align: center;">
-          {{ todo.is_done ? 'Completed' : 'Waiting' }}
-        </span>
-
-        <!-- Operator Buttons-->
-        <div style="flex: 1; display: flex; gap: 0.5rem; justify-content: flex-end;">
-          <button *ngIf="!isEditing(todo)" class="btn btn-warning btn-sm" (click)="startEditing(todo)">Edit</button>
-          <button *ngIf="!isEditing(todo)" class="btn btn-danger btn-sm" (click)="handleDelete(todo.id)">Delete</button>
-          <button *ngIf="isEditing(todo)" class="btn btn-success btn-sm" (click)="saveEdit(todo)"
-            [disabled]="!isContentValid">Save</button>
-          <button *ngIf="isEditing(todo)" class="btn btn-secondary btn-sm" (click)="cancelEdit(todo)">Cancel</button>
-        </div>
-      </li>
-    </ul>
-
+          <!-- Operator Buttons-->
+          <div style="flex: 1; display: flex; gap: 0.5rem; justify-content: flex-end;">
+            <button *ngIf="!isEditing(todo)" class="btn btn-warning btn-sm" (click)="startEditing(todo)">Edit</button>
+            <button *ngIf="!isEditing(todo)" class="btn btn-danger btn-sm"
+              (click)="handleDelete(todo.id)">Delete</button>
+            <button *ngIf="isEditing(todo)" class="btn btn-success btn-sm" (click)="saveEdit(todo)"
+              [disabled]="!isContentValid">Save</button>
+            <button *ngIf="isEditing(todo)" class="btn btn-secondary btn-sm" (click)="cancelEdit(todo)">Cancel</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="todos.length === 0" class="text-center mt-4">
+      Your task list is empty!
+    </div>
     <div *ngIf="isDeleting" class="popup-overlay">
       <div class="popup">
         <p>Are you sure for delete?</p>

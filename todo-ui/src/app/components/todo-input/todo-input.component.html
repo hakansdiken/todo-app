@@ -3,10 +3,18 @@
 
     <h4 class="mb-3">Create a task</h4>
 
-    <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Please enter a task" [(ngModel)]="content"
-        (ngModelChange)="onContentChange($event)" />
-      <button class="btn btn-primary" (click)="addTodo()" [disabled]="!isContentValid">Create</button>
+    <div class="mb-3">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Please enter a task" [(ngModel)]="content"
+          (ngModelChange)="onContentChange($event)" />
+        <button class="btn btn-primary" (click)="addTodo()">Create</button>
+      </div>
+      <span *ngIf="isSubmitted && !isContentNullValid" class="text-danger small mt-1">
+        Content is required!
+      </span>
+      <span *ngIf="isSubmitted && !isContentCharValid" class="text-danger small mt-1">
+        Your content must contain less than 100 characters!
+      </span>
     </div>
 
     <div class="form-check mb-2">
